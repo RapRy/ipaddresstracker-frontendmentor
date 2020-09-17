@@ -1,29 +1,29 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import styled from 'styled-components'
 
-const AddressDetails = ({ height }) => {
+const AddressDetails = ({ height, data }) => {
 
     const [conHeight, setConHeight] = useState();
-    const [boxHeight, setBoxHeight] = useState();
-    
-    const detailsContElem = useRef(null);
+
+    const detailsContElem = React.createRef();
 
     const DetailsCont = styled.div`
         background:#fff;
         box-shadow: 0px 0px 20px hsla(0, 0%, 17%, .2);
         border-radius:15px;
         padding:25px 40px;
-        width:90%;
+        width:85%;
         position:absolute;
         top:${props => props.height - props.conHeight}px;
         left:50%;
         transform:translateX(-50%);
+        z-index:2;
 
         .boxes{
             display:inline-block;
             width:25%;
-            height:${props => props.boxHeight}px;
+            height:100%;
             padding:0 3%;
             vertical-align:text-top;
             border-right:1px solid hsl(0, 0%, 59%);
@@ -53,33 +53,40 @@ const AddressDetails = ({ height }) => {
         }
     `;
 
+
     useEffect(() => {
-        const origHeight = detailsContElem.current.offsetHeight;
+
+        const origHeight = detailsContElem.current.clientHeight;
 
         const detConHeight = Math.floor(origHeight / 2);
-        const boxConHeight = origHeight - 50;
+
+        detailsContElem.current.style.cssText = `height:${origHeight}px`;
+
+        console.log(origHeight);
 
         setConHeight(detConHeight);
-        setBoxHeight(boxConHeight);
+
     }, [detailsContElem])
+
+    const { ip, isp, city, region, postalCode, timezone } = data[0] != undefined && data[0];
     
     return (
-        <DetailsCont height={height} conHeight={conHeight} boxHeight={boxHeight} ref={detailsContElem}>
+        <DetailsCont height={height} conHeight={conHeight} ref={detailsContElem}>
            <div className="boxes">
                 <span className="label">IP ADDRESS</span>
-                <h2>192.212.174.101</h2>
+                <h2>{ip}</h2>
            </div>
            <div className="boxes">
                 <span className="label">LOCATION</span>
-                <h2>Brooklyn, NY 10001</h2>
+                <h2>{city}, {region} {postalCode}</h2>
            </div>
            <div className="boxes">
                 <span className="label">TIMEZONE</span>
-                <h2>UTC -05:00</h2>
+                <h2>UTC {timezone}</h2>
            </div>
            <div className="boxes">
                 <span className="label">ISP</span>
-                <h2>SpaceX Starlink</h2>
+                <h2>{isp}</h2>
            </div>
         </DetailsCont>
     )
