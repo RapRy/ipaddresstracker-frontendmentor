@@ -4,7 +4,8 @@ import styled from 'styled-components'
 
 import arrow from '../images/icon-arrow.svg'
 
-const SearchField = () => {
+
+const SearchField = ({ setMarker, setSearchValue }) => {
 
     const SearchFieldCont = styled.div`
         text-align:center;
@@ -15,8 +16,10 @@ const SearchField = () => {
             width:50%;
             border:none;
             font-size: .9rem;
+            font-weight:500;
             box-shadow: 0px 0px 20px hsla(0, 0%, 17%, .2);
             color:hsl(0, 0%, 17%);
+            cursor:pointer;
 
             &::placeholder{
                 font-size: .8rem;
@@ -30,14 +33,34 @@ const SearchField = () => {
             border-radius:0 18px 18px 0;
             border:none;
             background:hsl(0, 0%, 17%);
+            cursor:pointer;
         }
     `;
+
+    const input = React.createRef();
+
+    const submitSearch = () => {
+        const value = input.current.value;
+        let newValue = ""
+        const regex = /[a-zA-Z]+$/;
+        if(value === ""){
+            return;
+        }else{
+            if(regex.test(value)){
+                newValue = `&domain=${value}`;
+            }else{
+                newValue = `&ipAddress=${value}`;
+            }
+        }
+        setSearchValue(newValue);
+        setMarker();
+    }
 
     return (
         <SearchFieldCont>
             <form>
-                <input type="text" name="search" placeholder="Search for any IP address or domain"/>
-                <button>
+                <input type="text" name="search" placeholder="Search for any IP address or domain" ref={input}/>
+                <button type="button" onClick={submitSearch}>
                     <img src={arrow} alt="search"/>
                 </button>
             </form>

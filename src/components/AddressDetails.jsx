@@ -2,11 +2,9 @@ import React, { useEffect, useState } from 'react'
 
 import styled from 'styled-components'
 
-const AddressDetails = ({ height, data }) => {
+const AddressDetails = React.forwardRef(({ height, data }, addressDetails) => {
 
     const [conHeight, setConHeight] = useState();
-
-    const detailsContElem = React.createRef();
 
     const DetailsCont = styled.div`
         background:#fff;
@@ -19,21 +17,15 @@ const AddressDetails = ({ height, data }) => {
         left:50%;
         transform:translateX(-50%);
         z-index:2;
+        display:grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap:3%;
 
         .boxes{
-            display:inline-block;
-            width:25%;
-            height:100%;
-            padding:0 3%;
-            vertical-align:text-top;
             border-right:1px solid hsl(0, 0%, 59%);
 
-            &:first-child{
-                padding-left:0;
-            }
 
             &:last-child{
-                padding-right:0;
                 border-right:none;
             }
 
@@ -56,22 +48,20 @@ const AddressDetails = ({ height, data }) => {
 
     useEffect(() => {
 
-        const origHeight = detailsContElem.current.clientHeight;
+        const origHeight = addressDetails.current.clientHeight;
 
-        const detConHeight = Math.floor(origHeight / 2);
+        if(origHeight === addressDetails.current.clientHeight){
+            const detConHeight = Math.floor(origHeight / 2);
+            setConHeight(detConHeight);
+        }else{
+            return
+        }
+    })
 
-        detailsContElem.current.style.cssText = `height:${origHeight}px`;
-
-        console.log(origHeight);
-
-        setConHeight(detConHeight);
-
-    }, [detailsContElem])
-
-    const { ip, isp, city, region, postalCode, timezone } = data[0] != undefined && data[0];
+    const { ip, isp, city, region, postalCode, timezone } = data[0] !== undefined && data[0];
     
     return (
-        <DetailsCont height={height} conHeight={conHeight} ref={detailsContElem}>
+        <DetailsCont height={height} conHeight={conHeight} ref={addressDetails}>
            <div className="boxes">
                 <span className="label">IP ADDRESS</span>
                 <h2>{ip}</h2>
@@ -90,6 +80,6 @@ const AddressDetails = ({ height, data }) => {
            </div>
         </DetailsCont>
     )
-}
+})
 
 export default AddressDetails;

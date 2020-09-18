@@ -4,7 +4,7 @@ import GlobalStyle from './globalStyles'
 
 import axios from 'axios'
 import styled from 'styled-components'
-import { Map, TileLayer, Marker, Popup } from 'react-leaflet'
+import { Map, TileLayer, Marker } from 'react-leaflet'
 
 import headerBg from './images/pattern-bg.png'
 import markerIcon from './images/icon-location.svg'
@@ -15,9 +15,11 @@ export class App extends Component {
     constructor(){
         super()
         this.headerElem = React.createRef();
+        this.addressDetails = React.createRef();
         this.state = {
             headerHeight: null,
-            data: []
+            data: [],
+            searchValue: ""
         }
     }
 
@@ -26,15 +28,28 @@ export class App extends Component {
         this.setMarker()
     }
 
+    setSearchValue = (searchValue) => {
+        this.setState({searchValue}, () => {
+            this.setMarker()
+        });
+    }
+
     setMarker = async () => {
-        const res = await axios.get('https://geo.ipify.org/api/v1?apiKey=at_APQYrq7ArKh4p9m1Ff4ITONfJpZGj')
-        const data = await res;
-        if(data.status === 200){
+        try{
+            const res = await axios.get(`https://geo.ipify.org/api/v1?apiKey=at_APQYrq7ArKh4p9m1Ff4ITONfJpZGj${this.state.searchValue}`)
+            // const res = await axios.get(`https://geo.ipify.org/api/v1?apiKey=at_APQYrq7ArKh4p9m1Ff4ITONfJpZGj&domain=0d2.net`)
+            const data = await res;
+            if(data.status === 200){
 
-            const { ip, isp, location } = data.data;
-            const { city, region, postalCode, timezone, lat, lng } = location
+                const { ip, isp, location } = data.data;
+                const { city, region, postalCode, timezone, lat, lng } = location
 
-            this.setState({data: [{ip, isp, city, region, postalCode, timezone, lat, lng}]})
+                this.setState({data: [{ip, isp, city, region, postalCode, timezone, lat, lng}]})
+            }
+        }catch(err){
+            if(err.response.status === 422){
+                console.log('cant find location');
+            }
         }
     }
 
@@ -66,11 +81,11 @@ export class App extends Component {
             }
         `;
 
-        const { lat, lng } = this.state.data[0] != undefined && this.state.data[0]
+        const { lat, lng } = this.state.data[0] !== undefined && this.state.data[0]
 
         // const position = [37.40599, -122.078514]
 
-        const position = [lat != undefined && lat, lng != undefined && lng]
+        const position = [lat !== undefined && lat, lng !== undefined && lng]
 
         // const L = window.L;
 
@@ -84,9 +99,9 @@ export class App extends Component {
                 <div className="mainContainer">
                     <Header bg={headerBg} ref={this.headerElem}>
                         <h1>IP Address Tracker</h1>
-                        <SearchField />
+                        <SearchField setMarker={this.setMarker} setSearchValue={this.setSearchValue}/>
                     </Header>
-                    <AddressDetails height={this.state.headerHeight} data={this.state.data}/>
+                    <AddressDetails height={this.state.headerHeight} data={this.state.data} ref={this.addressDetails}/>
                     <MapCont height={this.state.headerHeight}>
                         <Map center={position} zoom={13}>
                             <TileLayer
