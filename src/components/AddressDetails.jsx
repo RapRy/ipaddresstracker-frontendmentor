@@ -85,7 +85,7 @@ const AddressDetails = React.forwardRef(({ height, data }, addressDetails) => {
         }else{
             return
         }
-    })
+    }, [conHeight])
 
     const { ip, isp, city, region, postalCode, timezone } = data[0] !== undefined && data[0];
     
