@@ -43,6 +43,35 @@ const AddressDetails = React.forwardRef(({ height, data }, addressDetails) => {
                 font-weight:700;
             }
         }
+
+        @media all and (max-width:980px){
+            grid-template-columns:1fr 1fr;
+            grid-column-gap:10px;
+            grid-row-gap:20px;
+            top:${props => (props.height - props.conHeight) + 10}px;
+
+            .boxes{
+                border:none;
+
+                span{
+                    font-size:.6rem;
+                }
+
+                h2{
+                    font-size:1rem;
+                }
+            }
+        }
+
+        @media all and (max-width:624px){
+            grid-template-columns:1fr;
+            grid-row-gap:20px;
+            width:89%;
+
+            .boxes{
+                text-align:center;
+            }
+        }
     `;
 
 

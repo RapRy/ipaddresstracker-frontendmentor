@@ -61,7 +61,7 @@ export class App extends Component {
         const Header = styled.div`
             background:url(${props => props.bg});
             width:100%;
-            padding:30px 0 110px;
+            padding:30px 0 120px;
             background-size:cover;
 
             h1{
@@ -70,6 +70,10 @@ export class App extends Component {
                 font-size:1.8rem;
                 font-weight:500;
                 margin-bottom:30px;
+            }
+
+            @media all and (max-width:624px){
+                padding:30px 0 160px;
             }
         `;
 
@@ -99,7 +103,7 @@ export class App extends Component {
                 <div className="mainContainer">
                     <Header bg={headerBg} ref={this.headerElem}>
                         <h1>IP Address Tracker</h1>
-                        <SearchField setMarker={this.setMarker} setSearchValue={this.setSearchValue}/>
+                        <SearchField setMarker={this.setMarker} setSearchValue={this.setSearchValue} />
                     </Header>
                     <AddressDetails height={this.state.headerHeight} data={this.state.data} ref={this.addressDetails}/>
                     <MapCont height={this.state.headerHeight}>

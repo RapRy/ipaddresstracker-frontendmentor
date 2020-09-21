@@ -35,6 +35,12 @@ const SearchField = ({ setMarker, setSearchValue }) => {
             background:hsl(0, 0%, 17%);
             cursor:pointer;
         }
+
+        @media all and (max-width:980px){
+            input{
+                width:76%;
+            }
+        }
     `;
 
     const input = React.createRef();
