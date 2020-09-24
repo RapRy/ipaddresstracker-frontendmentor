@@ -26,6 +26,7 @@ export class App extends Component {
     componentDidMount(){
         this.getHeaderHeight()
         this.setMarker()
+        console.log('parent');
     }
 
     setSearchValue = (searchValue) => {
