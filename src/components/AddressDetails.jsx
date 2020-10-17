@@ -77,6 +77,8 @@ const AddressDetails = React.forwardRef(({ height, data }, addressDetails) => {
 
     useEffect(() => {
 
+        console.log("child")
+
         const origHeight = addressDetails.current.clientHeight;
 
         if(origHeight === addressDetails.current.clientHeight){
@@ -85,7 +87,7 @@ const AddressDetails = React.forwardRef(({ height, data }, addressDetails) => {
         }else{
             return
         }
-    })
+    }, [])
 
     const { ip, isp, city, region, postalCode, timezone } = data[0] !== undefined && data[0];
     
